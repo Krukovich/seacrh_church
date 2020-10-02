@@ -1,0 +1,17 @@
+.mapContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.mapboxgl-map {
+  height: 500px;
+  
+  .mapboxgl-canvas {
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
+    border-bottom-left-radius: 2rem;
+  }
+}
