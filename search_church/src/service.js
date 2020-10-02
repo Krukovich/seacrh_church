@@ -6,4 +6,6 @@ export const getData = async () => {
   return data;
 }
 
-export const a = 2;
+export const showChurchInfo = (data, id) => {
+  alert(id);
+}
