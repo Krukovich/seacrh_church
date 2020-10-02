@@ -5,7 +5,3 @@ export const getData = async () => {
   const data = await response.json();
   return data;
 }
-
-export const showChurchInfo = (data, id) => {
-  alert(id);
-}

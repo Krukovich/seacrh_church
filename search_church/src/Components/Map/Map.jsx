@@ -3,7 +3,6 @@ import ReactMapGL, { Marker } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { MAP_KEY } from '../../constants';
-import { showChurchInfo } from '../../service';
 
 import './Map.scss';
 
@@ -22,8 +21,8 @@ class Map extends Component {
  
  }
   render() {
-    const { church } = this.props;
-
+    const { churches, searchChurch } = this.props;
+    debugger;
     return (
       <ReactMapGL
         {...this.state.viewport}
@@ -31,12 +30,12 @@ class Map extends Component {
         mapStyle="mapbox://styles/mapbox/light-v10"
         onViewportChange={(viewport) => this.setState({viewport})}
       >
-        {church.map((church) => (
+        {churches.map((church) => (
           <div
             key={church.id}
             className="wrapper"
             id={church.id}
-            onClick={(event) => showChurchInfo(church, event.currentTarget.id)}
+            onClick={(event) => searchChurch(event.currentTarget.id)}
           >
             <Marker
               className="mapboxgl-marker"
