@@ -1,14 +1,19 @@
 import React, { useRef } from 'react';
 
-import { Form, InputGroup, FormControl, Button } from 'react-bootstrap';
+import { InputGroup, FormControl, Button, Form } from 'react-bootstrap';
 
 const Search = (props) => {
   const input = useRef(null);
 
   const { searchCity } = props;
 
+  const handlerSubmit = (event) => {
+    event.preventDefault();
+    searchCity(input);
+  }
+
   return (
-    <Form onSubmit={() => searchCity(input)}>
+    <Form onSubmit={(event) => handlerSubmit(event)}>
       <InputGroup className="mb-3">
         <FormControl
           ref={input}
@@ -16,15 +21,15 @@ const Search = (props) => {
         />
         <InputGroup.Append>
           <Button
-            type="submit"
+            type="button"
             variant="outline-secondary"
-            onClick={() => searchCity(input)}
+            onClick={(event) => handlerSubmit(event) }
           >
             Search
           </Button>
         </InputGroup.Append>
       </InputGroup>
-    </Form>  
+    </Form>
   );
 }
 

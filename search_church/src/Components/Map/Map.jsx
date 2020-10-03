@@ -22,14 +22,24 @@ class Map extends Component {
       }
     };
   }
-  
+
+  componentWillReceiveProps = (nextProps) => {
+    this.setState({
+      viewport: {
+        ...this.state.viewport,
+        latitude: nextProps.latitude,
+        longitude: nextProps.longitude,
+      }
+    })
+  } 
+
   render() {
     const { churches, searchChurch } = this.props;
-    
+
     return (
       <ReactMapGL
         {...this.state.viewport}
-        onViewportChange={(nextViewport) => this.setState({...this.state.viewport, nextViewport})}
+        onViewportChange={(viewport) => this.setState({viewport})}
         mapboxApiAccessToken={MAP_KEY}
         mapStyle="mapbox://styles/mapbox/streets-v11"
       >

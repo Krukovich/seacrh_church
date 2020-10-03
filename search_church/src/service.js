@@ -1,7 +1,7 @@
-import { FETCH_URL, CITY_INFO_KEY } from './constants';
+import { CITY_INFO_KEY } from './constants';
 
-export const getData = async () => {
-  const response = await fetch(FETCH_URL);
+export const getData = async (latitude, longitude) => {
+  const response = await fetch(`https://apiv4.updateparishdata.org/Churchs/?lat=${ latitude }&long=${ longitude }&pg=1`);
   const data = await response.json();
   return data;
 }

@@ -25,7 +25,8 @@ class App extends Component {
   }
 
   componentDidMount = async () => {
-    const data = await getData();
+    const { latitude, longitude } = this.state;
+    const data = await getData(latitude, longitude);
     this.setState({ churches: data });
   }
 
@@ -44,8 +45,10 @@ class App extends Component {
 
   searchCity = async({ current }) => {
     const { location } = await getCityInfo(current.value);
+    const data = await getData(location.lat, location.lon);
     this.setState(
       {
+        churches: data, 
         latitude: location.lat,
         longitude: location.lon,
       }
