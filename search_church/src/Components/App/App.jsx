@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 
 import { getData, getCityInfo } from '../../service';
+import { MESSAGE } from '../../constants';
 
 import Map from '../../Components/Map/Map';
 import ChurchInfo from '../ChurchInfo/ChurchInfo';
 import Search from '../Search/Search';
+import Warning from '../Warning/Warning';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '../App/App.scss';
@@ -14,6 +16,8 @@ class App extends Component {
     super()
 
     this.state = {
+      isError: false,
+      message: '',
       churches: [],
       latitude: 0,
       longitude: 0,
@@ -44,15 +48,21 @@ class App extends Component {
   }
 
   searchCity = async({ current }) => {
-    const { location } = await getCityInfo(current.value);
-    const data = await getData(location.lat, location.lon);
-    this.setState(
-      {
-        churches: data, 
-        latitude: location.lat,
-        longitude: location.lon,
-      }
-    );
+    const { isError } = this.state;
+    try {
+      const { location } = await getCityInfo(current.value);
+      const data = await getData(location.lat, location.lon);
+      this.setState(
+        {
+          churches: data, 
+          latitude: location.lat,
+          longitude: location.lon,
+          isError: false,
+        }
+      ); 
+    } catch (error) {
+      this.setState({ isError: true });
+    }
   }
   
   render() {
@@ -64,6 +74,7 @@ class App extends Component {
       churchPhoneNumber,
       churchAddressStreetAddress,
       churchUrl,
+      isError,
     } = this.state;
     
     return(
@@ -75,6 +86,9 @@ class App extends Component {
                 <Search
                   searchCity={ this.searchCity }
                 />
+              </div>
+              <div className="col-12">
+                { isError ? <Warning message={ MESSAGE.NOT_FOUND } /> : '' }
               </div>
               <div className="col-12">
                 <ChurchInfo
