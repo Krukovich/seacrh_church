@@ -36,13 +36,13 @@ class App extends Component {
 
   searchChurch = (id) => {
     const { churches } = this.state;
-    const tempCurch = churches.filter((church) => church.id === id);
+    const tempChurch = churches.find((church) => church.id === id);
     this.setState(
       {
-        churchName: tempCurch[0].name,
-        churchPhoneNumber: tempCurch[0].phone_number,
-        churchAddressStreetAddress: tempCurch[0].church_address_street_address,
-        churchUrl: tempCurch[0].url,
+        churchName: tempChurch.name,
+        churchPhoneNumber: tempChurch.phone_number,
+        churchAddressStreetAddress: tempChurch.church_address_street_address,
+        churchUrl: tempChurch.url,
       }
     );
   }

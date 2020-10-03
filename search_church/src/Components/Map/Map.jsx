@@ -22,7 +22,7 @@ class Map extends Component {
  }
   render() {
     const { churches, searchChurch } = this.props;
-    debugger;
+    
     return (
       <ReactMapGL
         {...this.state.viewport}
