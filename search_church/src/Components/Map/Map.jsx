@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactMapGL, { Marker } from 'react-map-gl';
+import ReactMapGL, { Marker, FlyToInterpolator } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { MAP_KEY } from '../../constants';
@@ -8,27 +8,30 @@ import './Map.scss';
 
 class Map extends Component {
   constructor(props) {
-    super();
+    super(props);
+
     this.state = {
       viewport: {
         width: 500,
         height: 500,
         latitude: props.latitude,
         longitude: props.longitude,
-        zoom: 10
+        transitionInterpolator: new FlyToInterpolator({speed: 1.2}),
+        transitionDuration: 'auto',
+        zoom: 10,
       }
-  };
- 
- }
+    };
+  }
+  
   render() {
     const { churches, searchChurch } = this.props;
     
     return (
       <ReactMapGL
         {...this.state.viewport}
+        onViewportChange={(nextViewport) => this.setState({...this.state.viewport, nextViewport})}
         mapboxApiAccessToken={MAP_KEY}
-        mapStyle="mapbox://styles/mapbox/light-v10"
-        onViewportChange={(viewport) => this.setState({viewport})}
+        mapStyle="mapbox://styles/mapbox/streets-v11"
       >
         {churches.map((church) => (
           <div

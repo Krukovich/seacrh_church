@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { getData } from '../../service';
+import { getData, getCityInfo } from '../../service';
 
 import Map from '../../Components/Map/Map';
 import ChurchInfo from '../ChurchInfo/ChurchInfo';
@@ -15,9 +15,8 @@ class App extends Component {
 
     this.state = {
       churches: [],
-      latitude: 40.730610,
-      longitude: -73.935242,
-      cityName: '',
+      latitude: 0,
+      longitude: 0,
       churchName: '',
       churchPhoneNumber: '',
       churchAddressStreetAddress: '',
@@ -28,10 +27,6 @@ class App extends Component {
   componentDidMount = async () => {
     const data = await getData();
     this.setState({ churches: data });
-  }
-
-  writeQuery = (label, value) => {
-    this.setState({ [label]: value});
   }
 
   searchChurch = (id) => {
@@ -47,13 +42,16 @@ class App extends Component {
     );
   }
 
-  searchChurchInCity = () => {
-    const { churches, cityName } = this.state;
-    const newData = churches.filter((church) => church.church_address_city_name = cityName);
-    this.setState({ churches: newData });
+  searchCity = async({ current }) => {
+    const { location } = await getCityInfo(current.value);
+    this.setState(
+      {
+        latitude: location.lat,
+        longitude: location.lon,
+      }
+    );
   }
   
-
   render() {
     const {
       churches,
@@ -64,7 +62,7 @@ class App extends Component {
       churchAddressStreetAddress,
       churchUrl,
     } = this.state;
-
+    
     return(
       <React.Fragment>
         <div className="container">
@@ -72,8 +70,7 @@ class App extends Component {
             <div className="col-12 col-lg-6 mt-5">
               <div className="col-12">
                 <Search
-                  writeQuery={ this.writeQuery }
-                  searchChurchInCity={ this.searchChurchInCity }
+                  searchCity={ this.searchCity }
                 />
               </div>
               <div className="col-12">

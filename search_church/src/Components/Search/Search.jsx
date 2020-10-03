@@ -1,26 +1,30 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
-import { InputGroup, FormControl, Button } from 'react-bootstrap';
+import { Form, InputGroup, FormControl, Button } from 'react-bootstrap';
 
 const Search = (props) => {
+  const input = useRef(null);
 
-  const { writeQuery, searchChurchInCity } = props;
+  const { searchCity } = props;
 
   return (
-    <InputGroup className="mb-3">
-      <FormControl
-        placeholder="Enter city name"
-        onChange={(event) => writeQuery('cityName', event.target.value)}
-      />
-      <InputGroup.Append>
-        <Button
-          variant="outline-secondary"
-          onClick={() => searchChurchInCity()}
-        >
-          Search
-        </Button>
-      </InputGroup.Append>
-    </InputGroup>  
+    <Form onSubmit={() => searchCity(input)}>
+      <InputGroup className="mb-3">
+        <FormControl
+          ref={input}
+          placeholder="Enter city name"
+        />
+        <InputGroup.Append>
+          <Button
+            type="submit"
+            variant="outline-secondary"
+            onClick={() => searchCity(input)}
+          >
+            Search
+          </Button>
+        </InputGroup.Append>
+      </InputGroup>
+    </Form>  
   );
 }
 
