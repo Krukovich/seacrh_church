@@ -23,15 +23,19 @@ class Map extends Component {
     };
   }
 
-  componentWillReceiveProps = (nextProps) => {
-    this.setState({
-      viewport: {
-        ...this.state.viewport,
-        latitude: nextProps.latitude,
-        longitude: nextProps.longitude,
-      }
-    })
-  } 
+  componentDidUpdate = (prevProps) => {
+    if ( prevProps.latitude !== this.props.latitude
+      && prevProps.longitude !== this.props.longitude) {
+        
+      this.setState({
+        viewport: {
+          ...this.state.viewport,
+          latitude: this.props.latitude,
+          longitude: this.props.longitude,
+        }
+      })
+    }
+  }
 
   render() {
     const { churches, searchChurch } = this.props;

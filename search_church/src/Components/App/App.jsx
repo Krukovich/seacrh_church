@@ -48,7 +48,6 @@ class App extends Component {
   }
 
   searchCity = async({ current }) => {
-    const { isError } = this.state;
     try {
       const { location } = await getCityInfo(current.value);
       const data = await getData(location.lat, location.lon);
