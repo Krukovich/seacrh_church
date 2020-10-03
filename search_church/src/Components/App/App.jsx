@@ -19,8 +19,8 @@ class App extends Component {
       isError: false,
       message: '',
       churches: [],
-      latitude: 0,
-      longitude: 0,
+      latitude: 40.730610,
+      longitude: -73.935242,
       churchName: '',
       churchPhoneNumber: '',
       churchAddressStreetAddress: '',
@@ -32,6 +32,15 @@ class App extends Component {
     const { latitude, longitude } = this.state;
     const data = await getData(latitude, longitude);
     this.setState({ churches: data });
+  }
+
+
+  searchChurchOnMoveMap = async (lat, lon) => {
+    const { churches } = this.state;
+    const churchIds = churches.map((church) => church.id);
+    const data = await getData(lat, lon);
+    const newChurches = data.filter((newChurch) => !churchIds.includes(newChurch.id));
+    this.setState({ churches: [...churches, ...newChurches] });
   }
 
   searchChurch = (id) => {
@@ -104,6 +113,7 @@ class App extends Component {
                 latitude={ latitude }
                 longitude={ longitude }
                 searchChurch={ this.searchChurch }
+                searchChurchOnMoveMap={ this.searchChurchOnMoveMap }
               />
             </div>
           </div>

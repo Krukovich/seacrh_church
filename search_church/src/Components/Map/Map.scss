@@ -1,8 +1,7 @@
 .mapboxgl-marker {
-  height: 1rem;
-  width: 1rem;
-  border-radius: 50%;
-  background-color: red;
+  height: 2rem;
+  width: 2rem;
+  background-image: url("/img/point.png");
 
   &:hover {
     cursor: pointer !important;

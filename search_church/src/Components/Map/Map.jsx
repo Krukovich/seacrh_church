@@ -21,12 +21,14 @@ class Map extends Component {
         zoom: 10,
       }
     };
+
+    this.timer = 0;
   }
 
   componentDidUpdate = (prevProps) => {
     if ( prevProps.latitude !== this.props.latitude
       && prevProps.longitude !== this.props.longitude) {
-        
+
       this.setState({
         viewport: {
           ...this.state.viewport,
@@ -37,15 +39,25 @@ class Map extends Component {
     }
   }
 
+  setChangeViewport = (viewport) => {
+    this.setState({viewport});
+
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.props.searchChurchOnMoveMap(viewport.latitude, viewport.longitude);
+    }, 500);
+  }
+
   render() {
     const { churches, searchChurch } = this.props;
 
     return (
       <ReactMapGL
         {...this.state.viewport}
-        onViewportChange={(viewport) => this.setState({viewport})}
+        onViewportChange={(viewport) => this.setChangeViewport(viewport)}
         mapboxApiAccessToken={MAP_KEY}
         mapStyle="mapbox://styles/mapbox/streets-v11"
+        className="main-map"
       >
         {churches.map((church) => (
           <div
