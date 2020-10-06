@@ -13,7 +13,7 @@ const Search = (props) => {
   }
 
   return (
-    <Form onSubmit={(event) => handlerSubmit(event)}>
+    <Form onSubmit={ (event) => handlerSubmit(event) }>
       <InputGroup className="mb-3">
         <FormControl
           ref={input}
@@ -23,7 +23,7 @@ const Search = (props) => {
           <Button
             type="button"
             variant="outline-secondary"
-            onClick={(event) => handlerSubmit(event) }
+            onClick={ (event) => handlerSubmit(event) }
           >
             Search
           </Button>

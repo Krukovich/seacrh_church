@@ -1,9 +1,27 @@
-.mapboxgl-marker {
+.marker {
   height: 2rem;
   width: 2rem;
   background-image: url("/img/point.png");
 
   &:hover {
     cursor: pointer !important;
-  } 
+  }
+
+  &_big {
+    position: relative;
+    height: var(--marker-size);
+    width: var(--marker-size);
+    background-color: #007AFF;
+    border-radius: 50%;
+  
+    span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: var(--marker-size);
+      font-weight: bold;
+      color: #fff;
+    }
+  }
 }

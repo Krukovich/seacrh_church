@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { getData, getCityInfo } from '../../service';
-import { MESSAGE } from '../../constants';
+import { MESSAGE, MODE } from '../../constants';
 
 import Map from '../../Components/Map/Map';
 import ChurchInfo from '../ChurchInfo/ChurchInfo';
@@ -25,6 +25,7 @@ class App extends Component {
       churchPhoneNumber: '',
       churchAddressStreetAddress: '',
       churchUrl: '',
+      mode: 'detailed',
     }
   }
 
@@ -34,13 +35,8 @@ class App extends Component {
     this.setState({ churches: data });
   }
 
-
-  searchChurchOnMoveMap = async (lat, lon) => {
-    const { churches } = this.state;
-    const churchIds = churches.map((church) => church.id);
-    const data = await getData(lat, lon);
-    const newChurches = data.filter((newChurch) => !churchIds.includes(newChurch.id));
-    this.setState({ churches: [...churches, ...newChurches] });
+  handleZoom = async (zoom) => {
+    this.setState({ mode: (zoom < 10) ? MODE.GROUP : MODE.DETAILED });
   }
 
   searchChurch = (id) => {
@@ -83,6 +79,7 @@ class App extends Component {
       churchAddressStreetAddress,
       churchUrl,
       isError,
+      mode,
     } = this.state;
     
     return(
@@ -109,11 +106,12 @@ class App extends Component {
             </div>
             <div className="col-12 col-lg-6 mt-5">
               <Map
+                mode={ mode }
                 churches={ churches }
                 latitude={ latitude }
                 longitude={ longitude }
                 searchChurch={ this.searchChurch }
-                searchChurchOnMoveMap={ this.searchChurchOnMoveMap }
+                handleZoom={ this.handleZoom }
               />
             </div>
           </div>

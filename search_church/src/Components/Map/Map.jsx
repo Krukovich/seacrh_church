@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+
 import ReactMapGL, { Marker, FlyToInterpolator } from 'react-map-gl';
+import { MAP_KEY, MAP_ZOOM_SCALE, MODE } from '../../constants';
+
 import 'mapbox-gl/dist/mapbox-gl.css';
-
-import { MAP_KEY } from '../../constants';
-
 import './Map.scss';
 
 class Map extends Component {
@@ -18,11 +18,9 @@ class Map extends Component {
         longitude: props.longitude,
         transitionInterpolator: new FlyToInterpolator({speed: 1.2}),
         transitionDuration: 'auto',
-        zoom: 10,
+        zoom: 11.5,
       }
     };
-
-    this.timer = 0;
   }
 
   componentDidUpdate = (prevProps) => {
@@ -41,15 +39,39 @@ class Map extends Component {
 
   setChangeViewport = (viewport) => {
     this.setState({viewport});
-
-    clearTimeout(this.timer);
-    this.timer = setTimeout(() => {
-      this.props.searchChurchOnMoveMap(viewport.latitude, viewport.longitude);
-    }, 500);
+    this.props.handleZoom(viewport.zoom);
   }
 
   render() {
-    const { churches, searchChurch } = this.props;
+    const { churches, searchChurch, mode } = this.props;
+
+    const markers = (mode === MODE.DETAILED) ? churches.map((church) => (
+      <div
+        key={church.id}
+        className="wrapper"
+        id={church.id}
+        onClick={(event) => searchChurch(event.currentTarget.id)}
+      >
+        <Marker
+          className="marker"
+          key={church.id}
+          latitude={Number(church.latitude)}
+          longitude={Number(church.longitude)}
+        />
+      </div>
+    )) : (
+      <div style={{ "--marker-size": `${MAP_ZOOM_SCALE.MIDDLE * this.state.viewport.zoom}px` }}>
+        <Marker
+          className="marker_big"
+          latitude={Number(this.props.latitude)}
+          longitude={Number(this.props.longitude)}
+        >
+          <span style={{ fontSize: `${MAP_ZOOM_SCALE.LOW * this.state.viewport.zoom}px` }} >
+            {churches.length}
+          </span>
+        </Marker>
+      </div>
+    )
 
     return (
       <ReactMapGL
@@ -59,21 +81,7 @@ class Map extends Component {
         mapStyle="mapbox://styles/mapbox/streets-v11"
         className="main-map"
       >
-        {churches.map((church) => (
-          <div
-            key={church.id}
-            className="wrapper"
-            id={church.id}
-            onClick={(event) => searchChurch(event.currentTarget.id)}
-          >
-            <Marker
-              className="mapboxgl-marker"
-              key={church.id}
-              latitude={Number(church.latitude)}
-              longitude={Number(church.longitude)}
-          />
-          </div>
-        ))}
+        { markers }
       </ReactMapGL>
     );
   }
