@@ -5,13 +5,14 @@
 
   &:hover {
     cursor: pointer !important;
+    background-image: url("/img/point_hover.png");
   }
 
   &_big {
     position: relative;
     height: var(--marker-size);
     width: var(--marker-size);
-    background-color: #007AFF;
+    background-color: #4B79BB;
     border-radius: 50%;
   
     span {
