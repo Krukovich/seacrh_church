@@ -1,7 +1,20 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import {
+  addNewChurches,
+  setChurchName,
+  setChurchAddress,
+  setChurchPhone,
+  setChurchUrl,
+  setMode,
+  setLatitude,
+  setLongitude,
+  setIsError
+} from '../../Store/Actions';
 
 import { getData, getCityInfo } from '../../service';
-import { MESSAGE, MODE } from '../../constants';
+import { MESSAGE, MODE, BREAK_POINT } from '../../constants';
 
 import Map from '../../Components/Map/Map';
 import ChurchInfo from '../ChurchInfo/ChurchInfo';
@@ -11,76 +24,88 @@ import Warning from '../Warning/Warning';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '../App/App.scss';
 
-class App extends Component {
-  constructor() {
-    super()
-
-    this.state = {
-      isError: false,
-      message: '',
-      churches: [],
-      latitude: 40.730610,
-      longitude: -73.935242,
-      churchName: '',
-      churchPhoneNumber: '',
-      churchAddressStreetAddress: '',
-      churchUrl: '',
-      mode: 'detailed',
-    }
+const mapStateToProps = ({ appSettings }) => {
+  return {
+    isError: appSettings.isError,
+    message: appSettings.message,
+    churches: appSettings.churches,
+    latitude: appSettings.latitude,
+    longitude: appSettings.longitude,
+    churchName: appSettings.churchName,
+    churchPhoneNumber: appSettings.churchPhoneNumber,
+    churchAddressStreetAddress: appSettings.churchAddressStreetAddress,
+    churchUrl: appSettings.churchUrl,
+    mode: appSettings.mode,
   }
+}
+
+const mapActionToProps = {
+  addNewChurches,
+  setChurchName,
+  setChurchAddress,
+  setChurchPhone,
+  setChurchUrl,
+  setMode,
+  setLatitude,
+  setLongitude,
+  setIsError,
+}
+
+class App extends Component {
 
   componentDidMount = async () => {
-    const { latitude, longitude } = this.state;
+    const { latitude, longitude, addNewChurches } = this.props;
     const data = await getData(latitude, longitude);
-    this.setState({ churches: data });
+    addNewChurches(data);
   }
 
   handleZoom = async (zoom) => {
-    this.setState({ mode: (zoom < 10) ? MODE.GROUP : MODE.DETAILED });
+    const { setMode } = this.props;
+
+    setMode((zoom < BREAK_POINT) ? MODE.GROUP : MODE.DETAILED);
   }
 
   searchChurch = (id) => {
-    const { churches } = this.state;
+    const {
+      churches,
+      setChurchName,
+      setChurchPhone,
+      setChurchAddress,
+      setChurchUrl,
+    } = this.props;
+
     const tempChurch = churches.find((church) => church.id === id);
-    this.setState(
-      {
-        churchName: tempChurch.name,
-        churchPhoneNumber: tempChurch.phone_number,
-        churchAddressStreetAddress: tempChurch.church_address_street_address,
-        churchUrl: tempChurch.url,
-      }
-    );
+
+    setChurchName(tempChurch.name);
+    setChurchPhone(tempChurch.phone_number);
+    setChurchAddress(tempChurch.church_address_street_address);
+    setChurchUrl(tempChurch.url);
   }
 
   searchCity = async({ current }) => {
+    const {
+      addNewChurches,
+      setIsError,
+      setLatitude,
+      setLongitude,
+    } = this.props;
+
     try {
       const { location } = await getCityInfo(current.value);
       const data = await getData(location.lat, location.lon);
-      this.setState(
-        {
-          churches: data, 
-          latitude: location.lat,
-          longitude: location.lon,
-          isError: false,
-        }
-      ); 
+      addNewChurches(data);
+      setIsError(false);
+      debugger;
+      setLatitude(location.lat);
+      setLongitude(location.lon);
+
     } catch (error) {
-      this.setState({ isError: true });
+      setIsError(true);
     }
   }
   
   render() {
-    const {
-      churches,
-      latitude,
-      longitude,
-      churchName,
-      churchPhoneNumber,
-      churchAddressStreetAddress,
-      churchUrl,
-      isError,
-      mode,
-    } = this.state;
+    const { isError } = this.props;
     
     return(
       <React.Fragment>
@@ -88,28 +113,17 @@ class App extends Component {
           <div className="row">
             <div className="col-12 col-lg-6 mt-5">
               <div className="col-12">
-                <Search
-                  searchCity={ this.searchCity }
-                />
+                <Search searchCity={ this.searchCity } />
               </div>
               <div className="col-12">
                 { isError ? <Warning message={ MESSAGE.NOT_FOUND } /> : '' }
               </div>
               <div className="col-12">
-                <ChurchInfo
-                  churchName={ churchName }
-                  churchPhoneNumber={ churchPhoneNumber }
-                  churchAddressStreetAddress={ churchAddressStreetAddress }
-                  churchUrl={ churchUrl }
-                />
+                <ChurchInfo />
               </div>
             </div>
             <div className="col-12 col-lg-6 mt-5">
               <Map
-                mode={ mode }
-                churches={ churches }
-                latitude={ latitude }
-                longitude={ longitude }
                 searchChurch={ this.searchChurch }
                 handleZoom={ this.handleZoom }
               />
@@ -121,4 +135,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(mapStateToProps, mapActionToProps)(App);

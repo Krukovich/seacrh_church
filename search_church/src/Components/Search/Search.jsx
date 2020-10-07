@@ -16,7 +16,7 @@ const Search = (props) => {
     <Form onSubmit={ (event) => handlerSubmit(event) }>
       <InputGroup className="mb-3">
         <FormControl
-          ref={input}
+          ref={ input }
           placeholder="Enter city name"
         />
         <InputGroup.Append>

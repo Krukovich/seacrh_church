@@ -1,13 +1,23 @@
 import React from 'react';
-
+import { connect } from 'react-redux';
+ 
 import { Card } from 'react-bootstrap';
+
+const mapStateToProps = ({ appSettings }) => {
+  return {
+    churchName: appSettings.churchName,
+    churchPhoneNumber: appSettings.churchPhoneNumber,
+    churchAddress: appSettings.churchAddress,
+    churchUrl: appSettings.churchUrl,
+  }
+}
 
 const ChurchInfo = (props) => {
 
   const {
     churchName,
     churchPhoneNumber,
-    churchAddressStreetAddress,
+    churchAddress,
     churchUrl,
   } = props;
   
@@ -16,20 +26,20 @@ const ChurchInfo = (props) => {
       <Card.Body>
         <Card.Title>Church Info</Card.Title>
         <div className="col-12">
-          {churchName}
+          { churchName }
         </div>
         <div className="col-12">
-          {churchPhoneNumber}
+          { churchPhoneNumber }
         </div>
         <div className="col-12">
-          {churchAddressStreetAddress}
+          { churchAddress }
         </div>
         <div className="col-12">
-          <a href={churchUrl ? churchUrl : ''}>{churchUrl ? churchUrl : ''}</a>
+          <a href={ churchUrl ? churchUrl : '' }>{ churchUrl ? churchUrl : '' }</a>
         </div>
       </Card.Body>
     </Card>
   );
 }
 
-export default ChurchInfo;
+export default connect(mapStateToProps)(ChurchInfo);

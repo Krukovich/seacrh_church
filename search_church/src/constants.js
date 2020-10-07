@@ -15,3 +15,5 @@ export const MODE = {
   DETAILED: 'detailed',
   GROUP: 'grouped',
 }
+
+export const BREAK_POINT = 11;
