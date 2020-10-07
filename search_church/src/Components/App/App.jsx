@@ -95,10 +95,8 @@ class App extends Component {
       const data = await getData(location.lat, location.lon);
       addNewChurches(data);
       setIsError(false);
-      debugger;
       setLatitude(location.lat);
       setLongitude(location.lon);
-
     } catch (error) {
       setIsError(true);
     }
